@@ -6,17 +6,16 @@ chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
+This section introduces three blog posts about cloud security, focusing on responsibility boundaries, shared infrastructure, and secure data deletion in AWS environments.
 
-This section will list and introduce the blogs you have posted to [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj). For example:
+### [Blog 1 - SHARED RESPONSIBILITY MODEL ON AWS](3.1-Blog1/)
 
-###  [Blog 1 - SESSION POLICIES IN AMAZON EKS POD IDENTITY](3.1-Blog1/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+This blog explains how security responsibilities are divided between AWS and the customer. It also shows how the responsibility boundary changes across different cloud services and discusses practical controls such as IAM, Amazon S3 public access settings, logging, and monitoring.
 
-###  [Blog 2 - ...](3.2-Blog2/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+### [Blog 2 - MULTI-TENANCY AND VIRTUALIZATION IN AWS](3.2-Blog2/)
 
-###  [Blog 3 - ...](3.3-Blog3/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+This blog examines how AWS supports multiple tenants on shared cloud infrastructure through virtualization and isolation technologies. It also discusses customer security controls such as IAM, VPC, Security Groups, KMS, CloudTrail, and CloudWatch, together with AWS technologies such as the Nitro System and Firecracker microVMs.
+
+### [Blog 3 - CRYPTOGRAPHIC DELETION FOR CLOUD STORAGE](3.3-Blog3/)
+
+This blog introduces FADE and the concept of cryptographic deletion for cloud storage. Instead of relying only on physical deletion, the approach separates encrypted data from its cryptographic keys and makes the data permanently unreadable by destroying the policy-bound decryption key.
