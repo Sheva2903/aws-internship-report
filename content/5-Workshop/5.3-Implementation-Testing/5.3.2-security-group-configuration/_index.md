@@ -3,7 +3,7 @@ title: "Security Group Configuration"
 date: 2024-01-01
 weight: 2
 chapter: false
-pre: " <b> 5.3.2 </b> "
+pre: " <b> 5.3.2. </b> "
 ---
 
 1. **Create security group for EC2**

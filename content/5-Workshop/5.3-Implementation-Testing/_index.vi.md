@@ -1,12 +1,12 @@
 ---
-title: "Truy cập S3 từ VPC"
+title: "Triển khai từng bước"
 date: 2024-01-01
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-#### Sử dụng Gateway endpoint
+#### Tổng quan
 
 Workshop này hướng dẫn di chuyển an toàn cơ sở dữ liệu của DIY Shop - một ứng dụng thương mại điện tử bán đồ thủ công - từ PostgreSQL cục bộ sang Amazon RDS:
 

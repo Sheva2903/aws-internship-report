@@ -6,15 +6,11 @@ chapter: false
 pre: " <b> 2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** Some words will be kept in English version so as to be ensure the meaning for the context.
-{{% /notice %}}
+In this section, I summarize the workshop/project proposal for deploying and securing the DIY Shop application on AWS.
 
-In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
+# DIY Shop E-commerce Platform
 
-# DIY SHOP
-
-## E-commerce management leverages AWS services
+## A Secure AWS-based Solution for Handmade Goods Online Sales
 
 ### 1. Executive Summary
 
