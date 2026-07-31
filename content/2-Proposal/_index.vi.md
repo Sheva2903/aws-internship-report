@@ -30,7 +30,7 @@ Hệ thống được triển khai trên **Amazon EC2**, chạy dưới dạng d
 
 DIY Shop được triển khai trong một VPC riêng, trải rộng trên 2 Availability Zone (AZ) để đảm bảo tính sẵn sàng cao. Yêu cầu của người dùng đi qua ba lớp trước khi đến được ứng dụng, từ Route 53 tới CloudFront và WAF, rồi đến Application Load Balancer. Ứng dụng chạy trên các EC2 instance được quản lý bởi Auto Scaling Group, phân bổ trên 2 AZ trong các public subnet. Phần dữ liệu bao gồm RDS PostgreSQL ở chế độ Multi-AZ và S3 để lưu trữ hình ảnh sản phẩm. Toàn bộ vòng đời vận hành được hỗ trợ bởi CloudWatch (giám sát), SNS (cảnh báo), Secrets Manager (quản lý thông tin xác thực), IAM (kiểm soát truy cập) và GitHub Actions (tự động hóa CI/CD).
 
-![Kiến trúc DIY Shop](final_arch.png)
+![Kiến trúc DIY Shop](image-1.png)
 
 ### Các dịch vụ AWS sử dụng
 

@@ -26,7 +26,7 @@ Có thể hiểu ngắn gọn như sau:
 
 > AWS bảo vệ nền tảng cloud. Người dùng bảo vệ những gì mình xây dựng và cấu hình trên nền tảng đó.
 
-{{< figure src="/images/3-BlogsPosted/3.1-Blog1/aws-shared-responsibility-model.png" title="Shared Responsibility Model on AWS" >}}
+{{< figure src="images/3-BlogsPosted/3.1-Blog1/aws-shared-responsibility-model.png" title="Shared Responsibility Model on AWS" >}}
 
 ## 2. Trách nhiệm thay đổi theo từng dịch vụ
 

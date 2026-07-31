@@ -30,7 +30,7 @@ The system is deployed on **Amazon EC2**, running as a managed `systemd` service
 
 DIY shop is deployed inside a dedicated VPC spanning 2 Avaibility Zones (AZs) to ensure high availability. User requests pass through three layers before reaching the application from Route 32 to CloudFront and WAF then Application Load Balancer. The application runs on EC2 instances managed by an Auto Scaling Group, distributed across 2 AZs in a public subnets. The data consists of RDS PostgreSQL in Multi-AZ mode and S3 for product image storage. The entire operational lifecycle is supported by CloudWatch (monitoring), SNS (alerting), Secrets Manager (credential management), IAM (access control), and GitHub Actions (CI/CD automation).
 
-![DIY Shop Architecture](final_arch.png)
+![DIY Shop Architecture](image-1.png)
 
 ### AWS Services Used
 
