@@ -1,43 +1,43 @@
 ---
-title: "EC2, RDS creation and secure connection"
+title: "Tạo EC2 và triển khai backend"
 date: 2024-01-01
 weight: 3
 chapter: false
 pre: " <b> 5.3.3. </b> "
 ---
 
-1. **Create EC2 instance**
+1. **Tạo EC2 instance**
 
-Access to EC2 console, select `Instances` and choose `Launch instance`. Enter your name of instance in `Name`
+Truy cập EC2 console, chọn `Instances` và chọn `Launch instance`. Nhập tên instance của bạn vào phần `Name`.
 
-Next, choose the OS model for instance. In this lab, i will choose:
+Tiếp theo, chọn hệ điều hành cho instance. Trong lab này, tôi sẽ chọn:
 
-```
+```txt
 AMI: Amazon Linux 2023
 Instance type: t3.micro
 ```
 
 ![OS Model](os_instance.png)
 
-Next, in the Key Pair part, create your key with `.pem` file and store it in your device for later use
+Tiếp theo, ở phần Key Pair, tạo key với định dạng `.pem` và lưu lại trên máy để sử dụng sau.
 
 ![Key Creation](key.png)
 
-Next, move to Network Settings. Choose your VPC, public subnet, `enable` for auto-assign public IP (this IP will be changed when instance reboots). For the security group, select your created security group for EC2
+Tiếp theo, chuyển tới phần Network Settings. Chọn VPC của bạn, public subnet, chọn `enable` cho auto-assign public IP. IP này sẽ thay đổi khi instance reboot. Ở phần security group, chọn security group bạn đã tạo cho EC2.
 
 ![Network Settings](network_ec2.png)
 
-Next, move to Storage part. Just enable `Encrypted` for EBS Encryption in advanced setting in this part
+Tiếp theo, chuyển tới phần Storage. Trong advanced setting của phần này, chỉ cần bật `Encrypted` cho EBS Encryption.
 
 ![Storage](storage.png)
 
-2. **Deploy backend to EC2 and connect RDS**
+2. **Deploy backend lên EC2 và kết nối RDS**
 
-In this step, it depends on your backend technology for the project. In my case as an example, I choose Spring Boot for my backend so I have to install JDK on EC2 and starts to connect to RDS.
+Ở bước này, cách làm sẽ phụ thuộc vào công nghệ backend của project. Trong trường hợp của tôi, backend sử dụng Spring Boot, nên tôi cần cài JDK trên EC2 và bắt đầu kết nối tới RDS.
 
-First, I will access into my EC2 via command: `ssh -i <your-pem-file-location> <user>@<public-ip>`
+Đầu tiên, tôi sẽ SSH vào EC2 bằng lệnh: `ssh -i <your-pem-file-location> <user>@<public-ip>`
 
-If success, you will get something like following:
+Nếu thành công, bạn sẽ thấy kết quả tương tự như sau:
 
 ```bash
 ┌──(mq㉿mqngyn)-[~]
@@ -64,14 +64,14 @@ Last login: Thu Jul 30 09:57:45 2026 from 116.100.247.223
 [ec2-user@ip-10-0-13-67 ~]$
 ```
 
-Now, i will install JDK into my EC2 instance via `sudo dnf install -y java-17-amazon-corretto`. Then I build `.jar` and copy to EC2:
+Bây giờ, tôi sẽ cài JDK vào EC2 instance bằng lệnh `sudo dnf install -y java-17-amazon-corretto`. Sau đó, tôi build file `.jar` và copy lên EC2:
 
 ```bash
 ./mvnw clean package -DskipTests
 scp -i <your-pem-key> <jar-location-after-build> ec2-user@<public-ip>:/home/ec2-user/app.jar
 ```
 
-In this project, I set up a `systemd` service for the Spring Boot application on EC2 so it runs as a persistent background process - automatically restarting on failure `(Restart=on-failure)` and starting again after an EC2 reboot - instead of relying on a manual `java -jar app.jar` session that dies the moment the SSH connection closes
+Trong project này, tôi cấu hình một `systemd` service cho ứng dụng Spring Boot trên EC2 để ứng dụng chạy như một background process ổn định. Service này sẽ tự động restart khi lỗi `(Restart=on-failure)` và tự chạy lại sau khi EC2 reboot, thay vì phụ thuộc vào một phiên `java -jar app.jar` thủ công vốn sẽ dừng ngay khi SSH connection bị đóng.
 
 ```bash
 [ec2-user@ip-10-0-13-67 ~]$ cat /etc/systemd/system/diyshop.service
@@ -91,9 +91,9 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-Notes that in the `env` file, I have defined all necessary variables for my application and connection to RDS such as `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
+Lưu ý rằng trong file `env`, tôi đã định nghĩa tất cả các biến cần thiết cho ứng dụng và kết nối tới RDS, ví dụ như `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`.
 
-Then, you can test via command `sudo systemctl status <your-app-name>`. If the status is active, you success:
+Sau đó, bạn có thể kiểm tra bằng lệnh `sudo systemctl status <your-app-name>`. Nếu status là active, bạn đã thành công:
 
 ```bash
 [ec2-user@ip-10-0-13-67 ~]$ sudo systemctl status diyshop
@@ -108,7 +108,7 @@ Then, you can test via command `sudo systemctl status <your-app-name>`. If the s
              └─16654 /usr/bin/java -jar /home/ec2-user/app.jar
 ```
 
-Next, testing for your connection to RDS. First, access to PostgreSQL RDS via: `psql -h diyshop-db-instance.cdcmqck2qzuj.ap-southeast-2.rds.amazonaws.com -p 5432 -U <master_username> -d diyshop`. Then run, `SELECT version, description, success FROM flyway_schema_history;` to verify your flyway:
+Tiếp theo, kiểm tra kết nối tới RDS. Đầu tiên, truy cập PostgreSQL RDS bằng lệnh: `psql -h diyshop-db-instance.cdcmqck2qzuj.ap-southeast-2.rds.amazonaws.com -p 5432 -U <master_username> -d diyshop`. Sau đó chạy `SELECT version, description, success FROM flyway_schema_history;` để kiểm tra Flyway:
 
 ```bash
 diyshop=> SELECT version, description, success FROM flyway_schema_history;
@@ -126,4 +126,4 @@ diyshop=> SELECT version, description, success FROM flyway_schema_history;
 (9 rows)
 ```
 
-If `success = t`, your migration is fine
+Nếu `success = t`, migration của bạn đã chạy thành công.

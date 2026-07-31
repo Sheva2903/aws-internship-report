@@ -1,40 +1,70 @@
 ---
-title : "Tạo một Gateway Endpoint"
-date : 2024-01-01 
-weight : 1
-chapter : false
-pre : " <b> 5.3.1 </b> "
+title: "Tạo VPC và cấu hình mạng"
+date: 2024-01-01
+weight: 1
+chapter: false
+pre: " <b> 5.3.1. </b> "
 ---
 
-1. Mở [Amazon VPC console](https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#Home:)
-2. Trong thanh điều hướng, chọn **Endpoints**, click **Create Endpoint**:
+1. **Tạo VPC**
+
+![Create VPC](vpc1.jpg)
+![Create VPC](vpc2.png)
 
 {{% notice note %}}
-Bạn sẽ thấy 6 điểm cuối VPC hiện có hỗ trợ AWS Systems Manager (SSM). Các điểm cuối này được Mẫu CloudFormation triển khai tự động cho workshop này.
+Hãy kiểm tra tính sẵn sàng cao bằng cách đảm bảo có **ít nhất 2 AZ**. Điều này sẽ tạo ra **2 public subnets** và **2 private subnets**.
 {{% /notice %}}
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/endpoints.png)
+Sau khi tạo VPC thành công với chế độ `VPC and more`, bạn đã có sẵn 2 private subnet và 2 public subnet như sau:
 
-3. Trong Create endpoint console:
-+ Đặt tên cho endpoint: s3-gwe
-+ Trong service category, chọn **aws services**
+![Preview VPC](previewvpc.png)
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/create-s3-gwe1.png)
+2. **Đi tới `Internet Gateways` ở thanh bên trái để tạo gateway cho VPC**
 
-+ Trong **Services**, gõ "s3" trong hộp tìm kiếm và chọn dịch vụ với loại **gateway**
+![Create internet gateway](ige.png)
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/services.png)
+3. **Sau đó nhấn `Actions`, chọn `Attach to VPC` và chọn VPC bạn vừa tạo. Nếu thành công, bạn sẽ thấy kết quả tương tự như sau:**
 
-+ Đối với VPC, chọn **VPC Cloud** từ drop-down menu.
-+ Đối với Route tables, chọn bảng định tuyến mà đã liên kết với 2 subnets (lưu ý: đây không phải là bảng định tuyến chính cho VPC mà là bảng định tuyến thứ hai do CloudFormation tạo).
+![Succes attachment](attachment.jpg)
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/vpc.png)
+4. **Cấu hình route table cho public subnets**
 
-+ Đối với Policy, để tùy chọn mặc định là Full access để cho phép toàn quyền truy cập vào dịch vụ. Bạn sẽ triển khai VPC endpoint policy trong phần sau để chứng minh việc hạn chế quyền truy cập vào S3 bucket dựa trên các policies.
+![Create route table](create_rtb.png)
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/policy.png)
+Sau đó nhấn `Edit Route` trong `Actions` để thêm route:
 
-+ Không thêm tag vào VPC endpoint.
-+ Click Create endpoint, click x sau khi nhận được thông báo tạo thành công.
+```json
+Destination: 0.0.0.0/0
+Target: Internet Gateway - <choose your IGW>
+```
 
-![endpoint](/images/5-Workshop/5.3-S3-vpc/complete.png)
+![Edit Route](edit_route.jpg)
+
+Tiếp theo, nhấn `Edit subnet association` trong `Actions` để thêm subnet. Ở bước này, hãy chọn 2 public subnet của bạn.
+
+![Choose subnet association](edit_subnet.png)
+
+5. **Cấu hình route table cho private subnets**
+
+Bước này tương tự như cấu hình public route table. Thay vì chọn public subnets, bây giờ hãy chọn private subnets.
+
+6. **Tạo S3 Gateway VPC Endpoint**
+
+Đi tới mục `Endpoints` ở thanh bên trái để tạo S3 endpoint.
+
+```txt
+- Name tag: <enter-your-name>
+- Type: AWS Service
+```
+
+Trong phần `Services`, tìm `S3` và chọn service name có type là `Gateway`.
+
+![Search for S3 service](service_s3endpoint.jpg)
+
+Trong phần `Network Settings` và `Route Table`, chọn VPC bạn đã tạo và chọn **private subnets**. Giữ nguyên phần `Policy` ở mặc định. Để kiểm tra kết quả, quay lại private route table. Bạn sẽ thấy một route mới có dạng `pl-xxxxx`. Đó chính là endpoint vừa được tạo.
+
+![Verify step](verify_endpoint.png)
+
+{{% notice note %}}
+Chúng ta không tạo **NAT Gateway** vì **EC2 instance** sẽ được đặt trong public subnet, còn **RDS** sẽ giao tiếp thông qua **S3 Gateway Endpoint** từ private subnet.
+{{% /notice %}}
