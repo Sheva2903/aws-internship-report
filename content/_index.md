@@ -8,30 +8,28 @@ chapter: false
     
 # Internship Report
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+
 
 ### Student Information:
-&emsp; **Full Name:** Nguyen Van A
+&emsp; **Full Name:** Do Huu Di
 
-&emsp; **Phone Number:** 0989888999 
+&emsp; **Phone Number:** 0903629305 
 
-&emsp; **Email:** Anguyenvan@gmail.com
+&emsp; **Email:** di.do07020@hcmut.edu.vn
 
-&emsp; **University:** Ho Chi Minh City University of Technology and Education
+&emsp; **University:** Ho Chi Minh City University of Technology - Vietnam National University
 
-&emsp; **Major:** Information Technology
+&emsp; **Major:** Computer Science
 
-&emsp; **Class:** AWS082025
+&emsp; **Class:** BKU - 2026
 
 &emsp; **Internship Company:** Amazon Web Services Viet Nam Company Limited
 
 &emsp; **Internship Position:** Workforce Bootcamp - First Cloud AI Journey
 
-&emsp; **Internship Duration:** From 12/08/2025 to 12/11/2025
+&emsp; **Internship Duration:** From 01/06/2026 to 14/08/2026
 
-![Your profile picture](/images/avatar.png)
+![Your profile picture](/images/avatar.jpg)
 
 ### Report Content
 

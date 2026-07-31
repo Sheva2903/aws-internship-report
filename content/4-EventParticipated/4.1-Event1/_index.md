@@ -1,126 +1,71 @@
 ---
-title: "Event 1"
-date: 2024-01-01
+title: "FCAJ - Agentic AI Build Week"
+date: 2026-07-25
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+# Event Report: “FCAJ - Agentic AI Build Week”
 
-# Summary Report: “GenAI-powered App-DB Modernization workshop”
+### Event Overview
 
-### Event Objectives
+On July 25, 2026, I attended the **FCAJ - Agentic AI Build Week** seminar.
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+During the event, teams that had participated in the Agentic AI Build Week competition presented their products and shared their experience throughout the competition.
 
-### Speakers
+### Main Content
 
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
+The teams introduced:
 
-### Key Highlights
+- The problems they wanted to solve
+- Their product ideas and target users
+- How they applied Agentic AI to their solutions
+- The main technologies and AWS services used
+- Difficulties they faced during development
+- Improvements made after testing and receiving feedback
+- Lessons learned from working under a limited timeline
 
-#### Identifying the drawbacks of legacy application architecture
+Although each team worked on a different topic, most presentations followed a similar process:
 
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
-
-#### Transitioning to modern application architecture – Microservices
-
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
-
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
-
-#### Domain-Driven Design (DDD)
-
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
-
-#### Event-Driven Architecture
-
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+1. Identify a practical problem
+2. Propose an AI-based solution
+3. Build a working prototype
+4. Test and improve the product
+5. Present the result and future development direction
 
 ### Key Takeaways
 
-#### Design Mindset
+From the presentations, I learned that a good AI product should not focus only on the model or technology. It should begin with a clear problem and provide useful value to users.
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+I also understood that Agentic AI applications often need several parts to work together, such as:
 
-#### Technical Architecture
+- A large language model
+- Tools or external services
+- Data sources
+- Workflow and decision logic
+- A user interface
+- Monitoring and error handling
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+The teams also showed that building a prototype in a short time requires clear task division, simple project scope, and frequent testing.
 
-#### Modernization Strategy
+### Applying the Experience to My Project
 
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
+The event gave me several ideas that can be applied to future projects:
 
-### Applying to Work
-
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
+- Start with the user problem before choosing technology
+- Keep the first version small and practical
+- Divide the system into clear tasks and components
+- Test the main workflow early
+- Improve the product based on feedback
+- Use AI only where it provides real value
 
 ### Event Experience
 
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
+The seminar was useful because I could see real products built by different teams instead of only learning concepts from documents.
 
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
+{{< figure src="image.jpg" title="Selfie at the event" >}}
 
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
+Listening to their competition journey also helped me understand the practical difficulties of building an AI application, including time management, technical issues, teamwork, and presenting the final product.
 
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
-
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
-
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
-
-#### Some event photos
-*Add your event photos here*  
-
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+Overall, the event gave me a clearer view of how Agentic AI can be used to build practical applications and how teams turn an initial idea into a working prototype.
