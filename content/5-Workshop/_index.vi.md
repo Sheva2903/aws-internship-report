@@ -6,28 +6,43 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-
-# Đảm bảo truy cập Hybrid an toàn đến S3 bằng cách sử dụng VPC endpoint
+# Triển khai DIY Shop trên AWS
 
 #### Tổng quan
 
-**AWS PrivateLink** cung cấp kết nối riêng tư đến các dịch vụ aws từ VPCs hoặc trung tâm dữ liệu (on-premise) mà không làm lộ lưu lượng truy cập ra ngoài public internet.
+Workshop này trình bày quá trình triển khai ứng dụng DIY Shop trên AWS.
 
-Trong bài lab này, chúng ta sẽ học cách tạo, cấu hình, và kiểm tra VPC endpoints để cho phép workload của bạn tiếp cận các dịch vụ AWS mà không cần đi qua Internet công cộng.
+DIY Shop là một website bán đồ handmade hỗ trợ tiếng Việt và tiếng Anh. Hệ thống gồm backend Spring Boot, cơ sở dữ liệu PostgreSQL, nơi lưu trữ hình ảnh sản phẩm và chức năng giám sát ứng dụng.
 
-Chúng ta sẽ tạo hai loại endpoints để truy cập đến Amazon S3: gateway vpc endpoint và interface vpc endpoint. Hai loại vpc endpoints này mang đến nhiều lợi ích tùy thuộc vào việc bạn truy cập đến S3 từ môi trường cloud hay từ trung tâm dữ liệu (on-premise).
-+ **Gateway** - Tạo gateway endpoint để gửi lưu lượng đến Amazon S3 hoặc DynamoDB using private IP addresses. Bạn điều hướng lưu lượng từ VPC của bạn đến gateway endpoint bằng các bảng định tuyến (route tables)
-+ **Interface** - Tạo interface endpoint để gửi lưu lượng đến các dịch vụ điểm cuối (endpoints) sử dụng Network Load Balancer để phân phối lưu lượng. Lưu lượng dành cho dịch vụ điểm cuối được resolved bằng DNS.
+Workshop sử dụng các thành phần AWS chính sau:
+
+- **Amazon VPC** để tạo mạng riêng cho hệ thống
+- **Security Groups** để kiểm soát lưu lượng
+- **Amazon EC2** để chạy backend
+- **Amazon RDS for PostgreSQL** để lưu dữ liệu ứng dụng
+- **Amazon S3** để lưu trữ hình ảnh sản phẩm
+- **AWS IAM** để quản lý quyền truy cập giữa các dịch vụ
+- **Amazon CloudWatch** để theo dõi log và hoạt động của ứng dụng
+
+Kiến trúc được xây dựng theo hướng đơn giản và an toàn. Application server được đặt trong public subnet, trong khi database được đặt trong các private subnet. Quyền truy cập giữa các dịch vụ được giới hạn bằng Security Group và IAM Role.
+
+#### Mục tiêu workshop
+
+Sau khi hoàn thành workshop, người thực hiện có thể:
+
+- Tạo VPC và cấu hình các thành phần mạng cần thiết
+- Cấu hình Security Group cho EC2 và RDS
+- Khởi tạo EC2 và triển khai backend Spring Boot
+- Tạo database PostgreSQL trên Amazon RDS
+- Kết nối an toàn giữa EC2 và RDS
+- Lưu trữ hình ảnh sản phẩm trên Amazon S3
+- Cấu hình IAM Role theo nguyên tắc đặc quyền tối thiểu
+- Theo dõi ứng dụng bằng Amazon CloudWatch
+- Dọn dẹp các tài nguyên AWS sau khi hoàn thành workshop
 
 #### Nội dung
 
-1. [Tổng quan về workshop](5.1-Workshop-overview/)
-2. [Chuẩn bị](5.2-Prerequiste/)
-3. [Truy cập đến S3 từ VPC](5.3-S3-vpc/)
-4. [Truy cập đến S3 từ TTDL On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (làm thêm)](5.5-Policy/)
-6. [Dọn dẹp tài nguyên](5.6-Cleanup/)
+1. [Giới thiệu workshop](5.1-Workshop-overview/)
+2. [Các bước chuẩn bị](5.2-Prerequiste/)
+3. [Triển khai từng bước](5.3-Implementation-Testing/)
+4. [Dọn dẹp tài nguyên](5.4-Cleanup/)

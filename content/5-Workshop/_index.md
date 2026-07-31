@@ -5,27 +5,44 @@ weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-# Secure Hybrid Access to S3 using VPC Endpoints
+# Deploying DIY Shop on AWS
 
 #### Overview
 
-**AWS PrivateLink** provides private connectivity to AWS services from VPCs and your on-premises networks, without exposing your traffic to the Public Internet.
+This workshop presents the process of deploying the DIY Shop application on AWS.
 
-In this lab, you will learn how to create, configure, and test VPC endpoints that enable your workloads to reach AWS services without traversing the Public Internet.
+DIY Shop is a bilingual online store for handmade products. The system includes a Spring Boot backend, a PostgreSQL database, product image storage, and monitoring.
 
-You will create two types of endpoints to access Amazon S3: a Gateway VPC endpoint, and an Interface VPC endpoint. These two types of VPC endpoints offer different benefits depending on if you are accessing Amazon S3 from the cloud or your on-premises location
-+ **Gateway** - Create a gateway endpoint to send traffic to Amazon S3 or DynamoDB using private IP addresses.You route traffic from your VPC to the gateway endpoint using route tables.
-+ **Interface** - Create an interface endpoint to send traffic to endpoint services that use a Network Load Balancer to distribute traffic. Traffic destined for the endpoint service is resolved using DNS.
+The workshop covers the main AWS components used in the project:
+
+- **Amazon VPC** for network isolation
+- **Security Groups** for traffic control
+- **Amazon EC2** for running the backend
+- **Amazon RDS for PostgreSQL** for storing application data
+- **Amazon S3** for storing product images
+- **AWS IAM** for managing service permissions
+- **Amazon CloudWatch** for logs and monitoring
+
+The implementation follows a simple and secure architecture. The application server is placed in a public subnet, while the database is placed in private subnets. Access between services is limited through Security Groups and IAM roles.
+
+#### Workshop Objectives
+
+After completing this workshop, you will be able to:
+
+- Create a VPC and configure the required networking components
+- Configure Security Groups for EC2 and RDS
+- Launch an EC2 instance and deploy the Spring Boot backend
+- Create an Amazon RDS PostgreSQL database
+- Connect EC2 to RDS securely
+- Store product images in Amazon S3
+- Configure an IAM role with least-privilege permissions
+- Monitor the application with Amazon CloudWatch
+- Clean up the AWS resources after completing the workshop
 
 #### Content
 
-1. [Workshop overview](5.1-Workshop-overview)
-2. [Prerequiste](5.2-Prerequiste/)
-3. [Access S3 from VPC](5.3-S3-vpc/)
-4. [Access S3 from On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (Bonus)](5.5-Policy/)
-6. [Clean up](5.6-Cleanup/)
+1. [Workshop Introduction](5.1-Workshop-overview/)
+2. [Prerequisites](5.2-Prerequisite/)
+3. [Step-by-step Implementation](5.3-Implementation-Testing/)
+4. [Clean Up](5.4-Cleanup/)

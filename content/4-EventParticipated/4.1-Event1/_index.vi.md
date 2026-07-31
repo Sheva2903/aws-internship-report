@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-# Bài thu hoạch sự kiện “FCAJ - Agentic AI Build Week”
+## Bài thu hoạch sự kiện “FCAJ - Agentic AI Build Week”
 
 ### Tổng quan sự kiện
 
