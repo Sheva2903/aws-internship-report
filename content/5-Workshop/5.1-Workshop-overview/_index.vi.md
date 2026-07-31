@@ -6,7 +6,9 @@ chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-Workshop này hướng dẫn cách di chuyển cơ sở dữ liệu của DIY Shop - một ứng dụng thương mại điện tử bán đồ thủ công - từ PostgreSQL chạy local sang Amazon RDS một cách bảo mật:
+Workshop này hướng dẫn di chuyển an toàn cơ sở dữ liệu của DIY Shop - một ứng dụng thương mại điện tử bán đồ thủ công - từ PostgreSQL cục bộ sang Amazon RDS:
 
-- Đặt RDS trong private subnet, không public ra Internet, và chỉ cho phép kết nối từ Security Group của backend
-- Cấp quyền truy cập S3 cho ứng dụng thông qua IAM Role thay vì sử dụng access key tĩnh.
+- Đặt RDS trong private subnet không lộ ra Internet công cộng, giới hạn kết nối chỉ cho Security Group của backend
+- Cấp quyền truy cập S3 cho ứng dụng thông qua IAM Role thay vì access key tĩnh.
+
+![alt text](image-1.png)

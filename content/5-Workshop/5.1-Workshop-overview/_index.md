@@ -10,3 +10,5 @@ This workshop covers securely migrating the database of DIY Shop - a handmade-go
 
 - Placing RDS in a private subnet with no public Internet exposure, restricting connections to only the backend's Security Group
 - Granting the application S3 access via an IAM Role instead of static access keys.
+
+![alt text](image-1.png)

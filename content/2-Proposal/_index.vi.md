@@ -6,147 +6,128 @@ chapter: false
 pre: " <b> 2. </b> "
 ---
 
-Trong phần này, tôi tóm tắt đề xuất workshop/project về việc triển khai và bảo mật ứng dụng DIY Shop trên AWS.
+{{% notice warning %}}
+⚠️ **Lưu ý:** Một số từ ngữ sẽ được giữ nguyên tiếng Anh trong bản dịch để đảm bảo đúng ngữ nghĩa theo ngữ cảnh.
+{{% /notice %}}
 
-# Nền tảng thương mại điện tử DIY Shop
+# DIY SHOP
 
-## Giải pháp AWS bảo mật cho website bán đồ thủ công trực tuyến
+## E-commerce management leverages AWS services
 
 ### 1. Tóm tắt điều hành
 
-DIY Shop là một website được xây dựng cho mô hình kinh doanh đồ thủ công và tranh vẽ thủ công, hỗ trợ chủ shop đơn lẻ trong việc quản lý và vận hành cửa hàng online. Ứng dụng cho phép khách hàng xem danh mục sản phẩm và đặt hàng trực tiếp trên website thông qua hai phương thức thanh toán: (1) Thanh toán khi nhận hàng (COD) và (2) Chuyển khoản ngân hàng bằng VietQR. Sau khi đặt hàng thành công, hệ thống cho phép khách hàng theo dõi trạng thái đơn hàng bằng mã đơn hàng nhận được sau khi checkout.
-
-Ở phía vận hành, dashboard hỗ trợ chủ shop quản lý danh mục sản phẩm, kiểm soát tồn kho và xử lý trạng thái đơn hàng. Trạng thái thanh toán được theo dõi độc lập với trạng thái giao hàng. Website tận dụng các dịch vụ AWS để hỗ trợ tự động hóa quá trình triển khai, vận hành, giám sát và quản lý hệ thống.
+DIY Shop là một website được xây dựng cho hoạt động kinh doanh đồ thủ công và tranh vẽ tay, hỗ trợ chủ shop (người bán duy nhất) quản lý và vận hành cửa hàng trực tuyến. Ứng dụng cho phép khách hàng duyệt danh mục sản phẩm và đặt hàng qua website với hai phương thức thanh toán: (1) Thanh toán khi nhận hàng (COD) và (2) Chuyển khoản ngân hàng (VietQR). Sau khi đặt hàng thành công, hệ thống cho phép khách hàng theo dõi trạng thái đơn hàng bằng mã đơn nhận được khi thanh toán. Về phía vận hành, một dashboard hỗ trợ chủ shop quản lý danh mục sản phẩm, kiểm soát tồn kho và xử lý trạng thái đơn hàng, với trạng thái thanh toán được theo dõi độc lập với trạng thái giao hàng. Website tận dụng các dịch vụ AWS để hiện thực hóa việc tự động hóa vận hành và quản lý.
 
 ### 2. Tuyên bố vấn đề
 
-### Vấn đề hiện tại
+### Vấn đề là gì?
 
-Người bán đồ thủ công và tranh vẽ hiện chưa có một kênh bán hàng online riêng để trưng bày sản phẩm, nhận đơn hàng và theo dõi tồn kho. Khi số lượng đơn hàng tăng lên, quy trình xử lý thủ công dễ phát sinh lỗi vì không có một nguồn dữ liệu thống nhất giữa người bán và khách hàng.
-
-Với mô hình một người bán không chuyên về kỹ thuật và không có đội ngũ kỹ thuật hoặc vận hành riêng, chủ shop sẽ phải tự xử lý nhiều vấn đề nằm ngoài chuyên môn, chẳng hạn như bảo vệ thông tin cá nhân của khách hàng gồm tên, số điện thoại, địa chỉ nhận hàng, hoặc xử lý sự cố máy chủ. Điều này có thể dẫn đến việc mất nhiều thời gian khôi phục hệ thống, đồng thời làm tăng rủi ro lộ thông tin khách hàng.
+Người bán đồ thủ công và tranh vẽ hiện chưa có một kênh bán hàng trực tuyến chuyên biệt để trưng bày sản phẩm, nhận đơn hàng và theo dõi tồn kho. Điều này khiến quy trình dễ phát sinh sai sót khi số lượng đơn hàng tăng lên, do không có nguồn dữ liệu chung giữa người bán và khách hàng. Là một người bán đơn lẻ, không có chuyên môn kỹ thuật - hoạt động mà không có đội ngũ kỹ thuật hay vận hành riêng - chủ shop sẽ phải xử lý những công việc vượt quá chuyên môn của mình, chẳng hạn như bảo mật dữ liệu cá nhân của khách hàng (họ tên, số điện thoại và địa chỉ thu thập khi thanh toán) và xử lý sự cố máy chủ. Điều này có thể dẫn đến việc khắc phục tốn nhiều thời gian, thậm chí có nguy cơ lộ thông tin khách hàng.
 
 ### Giải pháp
 
-Hệ thống được triển khai trên **Amazon EC2**, chạy dưới dạng một `systemd` service để đảm bảo ứng dụng hoạt động ổn định như một background process. Ứng dụng kết nối tới **Amazon RDS PostgreSQL instance** được đặt trong private subnet, với kết nối được giới hạn theo nguyên tắc least privilege. Ảnh sản phẩm được lưu trữ trên **Amazon S3** thông qua **IAM Role**, thay vì sử dụng access key tĩnh trong ứng dụng.
-
-**Amazon CloudWatch** được sử dụng để thu thập application logs và access logs. Từ các logs này, hệ thống tạo error metrics thông qua metric filters, sau đó kích hoạt email alerts khi số lượng lỗi vượt quá ngưỡng cấu hình. **GitHub Actions** được sử dụng để tự động hóa quá trình build, test và deploy mỗi khi có thay đổi trong source code.
+Hệ thống được triển khai trên **Amazon EC2**, chạy dưới dạng dịch vụ `systemd` được quản lý, kết nối tới một **instance Amazon RDS PostgreSQL** đặt trong private subnet (với kết nối bị giới hạn theo nguyên tắc least-privilege); hình ảnh sản phẩm được lưu trên **Amazon S3** thông qua một **IAM role**. **Amazon CloudWatch** thu thập log ứng dụng và log truy cập, từ đó suy ra các metric lỗi thông qua metric filter, rồi kích hoạt cảnh báo qua email khi tỷ lệ lỗi vượt ngưỡng. **GitHub Actions** tự động hóa việc build, test và deploy mỗi khi có thay đổi code.
 
 ### 3. Kiến trúc giải pháp
 
-DIY Shop được triển khai bên trong một VPC riêng, trải rộng trên 2 Availability Zones (AZs) để tăng tính sẵn sàng cao. User requests đi qua các lớp edge và phân phối traffic trước khi tới application layer, bao gồm Route 53, CloudFront, WAF và Application Load Balancer. Ứng dụng chạy trên các EC2 instances được quản lý bởi Auto Scaling Group, phân tán trên 2 AZs.
+DIY Shop được triển khai trong một VPC riêng, trải rộng trên 2 Availability Zone (AZ) để đảm bảo tính sẵn sàng cao. Yêu cầu của người dùng đi qua ba lớp trước khi đến được ứng dụng, từ Route 53 tới CloudFront và WAF, rồi đến Application Load Balancer. Ứng dụng chạy trên các EC2 instance được quản lý bởi Auto Scaling Group, phân bổ trên 2 AZ trong các public subnet. Phần dữ liệu bao gồm RDS PostgreSQL ở chế độ Multi-AZ và S3 để lưu trữ hình ảnh sản phẩm. Toàn bộ vòng đời vận hành được hỗ trợ bởi CloudWatch (giám sát), SNS (cảnh báo), Secrets Manager (quản lý thông tin xác thực), IAM (kiểm soát truy cập) và GitHub Actions (tự động hóa CI/CD).
 
-Tầng dữ liệu bao gồm RDS PostgreSQL ở chế độ Multi-AZ để lưu trữ dữ liệu giao dịch chính, và S3 để lưu ảnh sản phẩm. Toàn bộ vòng đời vận hành được hỗ trợ bởi CloudWatch cho monitoring, SNS cho alerting, Secrets Manager cho credential management, IAM cho access control, và GitHub Actions cho CI/CD automation.
+![Kiến trúc DIY Shop](final_arch.png)
 
-![DIY Shop Architecture](architecture.jpg)
+### Các dịch vụ AWS sử dụng
 
-### AWS Services được sử dụng
-
-- **Amazon VPC**: Cung cấp môi trường mạng tách biệt với 2 public subnets và 2 private subnets trải rộng trên 2 AZs.
-- **Amazon EC2**: Chạy Spring Boot backend dưới dạng một `systemd` service trong public subnet.
-- **Amazon RDS**: Cung cấp managed relational database để lưu trữ dữ liệu giao dịch chính của hệ thống.
-- **Amazon S3**: Lưu trữ ảnh sản phẩm; database chỉ lưu reference tới ảnh.
-- **Route 53**: Phân giải domain tới CloudFront.
-- **CloudFront**: CDN dùng để cache static assets tại edge locations.
-- **AWS IAM**: Áp dụng nguyên tắc least privilege cho quyền truy cập giữa các dịch vụ.
-- **Amazon CloudWatch**: Tập trung application logs và access logs vào log groups, tạo error-count metrics thông qua metric filters và đánh giá alarms dựa trên các metrics đó.
-- **Amazon SNS**: Gửi email notification khi CloudWatch Alarm chuyển sang trạng thái `ALARM`.
-- **Secrets Manager**: Lưu trữ và hỗ trợ rotation cho database credentials và seller credentials.
+- **Amazon VPC**: Cung cấp mạng biệt lập với 2 public subnet và 2 private subnet trên 2 AZ
+- **Amazon EC2**: Lưu trữ backend Spring Boot, chạy dưới dạng dịch vụ `systemd` được quản lý trong public subnet
+- **Amazon RDS**: Cơ sở dữ liệu quan hệ được quản lý, lưu toàn bộ dữ liệu giao dịch cốt lõi
+- **Amazon S3**: Lưu trữ hình ảnh sản phẩm; cơ sở dữ liệu chỉ lưu tham chiếu
+- **Route 53**: phân giải domain trỏ về CloudFront
+- **CloudFront**: CDN, cache tài nguyên tĩnh tại các edge location
+- **AWS IAM**: Áp dụng nguyên tắc least privilege
+- **Amazon CloudWatch**: Tập trung log ứng dụng và log truy cập vào log group, suy ra metric đếm lỗi từ các log đó thông qua metric filter, và đánh giá alarm dựa trên các metric này
+- **Amazon SNS**: Gửi thông báo email mỗi khi CloudWatch Alarm chuyển sang trạng thái `ALARM`
+- **Secrets Manager**: lưu trữ và tự động xoay vòng thông tin xác thực của DB và người bán
 
 ### Thiết kế thành phần
 
-- **Edge và Traffic Distribution**: Route 53 phân giải domain tới alias record trỏ về CloudFront. CloudFront cache static assets và có thể gắn WAF để kiểm tra request trước khi chuyển tiếp tới ALB. ALB chịu trách nhiệm load balancing và TLS termination.
-- **Application Tier**: Auto Scaling Group quản lý các EC2 instances trên 2 AZs. Mỗi instance chạy một Spring Boot `jar`, trong đó React frontend được bundle chung vào cùng origin, nên không cần cấu hình CORS riêng.
-- **Data Tier**: RDS PostgreSQL Multi-AZ lưu trữ dữ liệu giao dịch chính. S3 được dùng để lưu ảnh sản phẩm thông qua IAM Role và presigned URLs.
-- **Security và Credential Management**: Secrets Manager lưu database credentials; IAM áp dụng least-privilege access cho EC2.
-- **Observability**: CloudWatch Agent thu thập logs và metrics. CloudWatch Alarm kiểm tra điều kiện dựa trên metric filters và kích hoạt SNS notification khi có lỗi vượt ngưỡng.
-- **CI/CD**: GitHub Actions tự động build, test và deploy ứng dụng mỗi khi có thay đổi được push lên repository.
+- **Edge và phân phối lưu lượng**: Route 53 phân giải domain tới một alias record trỏ về CloudFront (cache tài nguyên tĩnh, gắn WAF). Mọi request đều được WAF kiểm tra trước khi chuyển tới ALB (cân bằng tải, chấm dứt TLS).
+- **Tầng ứng dụng**: Auto Scaling Group quản lý các EC2 instance (2 AZ), mỗi instance chạy một file `jar` Spring Boot duy nhất với frontend React được đóng gói cùng origin, nên không cần cấu hình CORS
+- **Tầng dữ liệu**: RDS PostgreSQL Multi-AZ, sử dụng S3 để lưu hình ảnh sản phẩm thông qua IAM Role và presigned URL
+- **Bảo mật và quản lý thông tin xác thực**: Secrets Manager lưu trữ thông tin xác thực DB; IAM áp dụng quyền truy cập least-privilege cho EC2
+- **Khả năng quan sát (Observability)**: CloudWatch Agent thu thập log và metric. Alarm chịu trách nhiệm kiểm tra điều kiện dựa trên các metric đó
+- **CI/CD**: GitHub Actions tự động build, test và deploy mỗi khi có push
 
 ### 4. Triển khai kỹ thuật
 
 **Các giai đoạn triển khai**
+Dự án được thực hiện qua 2 giai đoạn liên tiếp: (1) Nền tảng cốt lõi (Core Foundation), (2) Bảo mật và độ tin cậy (Security and Reliability).
 
-Dự án được triển khai qua 2 giai đoạn liên tiếp: (1) Core Foundation, (2) Security and Reliability.
+Về nền tảng cốt lõi (2 tuần):
 
-Về giai đoạn Core Foundation trong 2 tuần:
+- Khởi tạo VPC, Security Group, RDS PostgreSQL và EC2; migrate schema thông qua Flyway lên instance RDS thật
+- Thiết lập một S3 bucket với IAM Role least-privilege để lưu hình ảnh sản phẩm, xác thực bằng một lần upload thử thực tế
+- Ổn định ứng dụng thông qua dịch vụ `systemd`, kết nối CloudWatch Agent, Metric Filter, Alarm và SNS. Sau đó, xây dựng pipeline CI/CD GitHub Actions để build và deploy tự động, và gắn một Elastic IP
 
-- Provision VPC, Security Groups, RDS PostgreSQL và EC2; migrate database schema lên RDS thật thông qua Flyway.
-- Thiết lập S3 bucket với IAM Role theo nguyên tắc least privilege để lưu trữ ảnh sản phẩm, sau đó kiểm tra bằng một upload test thực tế.
-- Ổn định ứng dụng bằng `systemd` service, cấu hình CloudWatch Agent, Metric Filters, Alarms và SNS. Sau đó xây dựng GitHub Actions CI/CD pipeline để tự động build và deploy, đồng thời gắn Elastic IP cho EC2.
+Về bảo mật và độ tin cậy (1 tuần):
 
-Về giai đoạn Security and Reliability trong 1 tuần:
-
-- **Secrets Manager**: Di chuyển toàn bộ credentials từ plaintext files trên EC2 sang secrets có audit trail và hỗ trợ automatic rotation.
-- **Multi-AZ RDS**: Bật Multi-AZ cho database instance hiện có để loại bỏ single point of failure ở data tier.
-- **Application Load Balancer**: Bổ sung lớp load balancing và TLS termination, tạo nền tảng để mở rộng bằng Auto Scaling Group.
-- **AWS WAF**: Gắn Web ACL để lọc các application-layer attacks và rate-limit login endpoint.
+- **Secrets Manager**: chuyển toàn bộ thông tin xác thực từ file văn bản thuần trên EC2 sang secrets có audit trail và tự động xoay vòng
+- **Multi-AZ RDS**: bật Multi-AZ cho instance hiện có, loại bỏ điểm lỗi đơn (single point of failure) ở tầng dữ liệu
+- **Application Load Balancer**: thêm một lớp cân bằng tải và chấm dứt TLS, làm nền tảng cho Auto Scaling Group
+- **AWS WAF**: gắn một Web ACL để lọc các cuộc tấn công ở tầng ứng dụng và giới hạn tốc độ (rate-limit) cho endpoint đăng nhập
 
 **Yêu cầu kỹ thuật**
 
-- **Backend**: Java 17, Spring Boot 4.0.6, Spring Data JPA, Flyway để quản lý database schema versioning, Spring Security với form login và CSRF cho seller portal.
-- **Frontend**: React + Vite + TypeScript + Tailwind CSS, được bundle trực tiếp vào thư mục `static/` của Spring Boot để chạy cùng origin và không cần cấu hình CORS.
-- **Database**: PostgreSQL 18 trên Amazon RDS, schema được quản lý hoàn toàn bằng Flyway migrations và versioned cùng source code.
-- **Infrastructure**: Tất cả AWS resources được provision thông qua AWS Console. Do giới hạn thời gian, project không sử dụng Infrastructure as Code, nhưng mỗi bước cấu hình đều được ghi lại để tái sử dụng trong workshop lab.
-- **CI/CD**: GitHub Actions thực hiện build và test, sử dụng PostgreSQL service container để mô phỏng môi trường RDS thật trong CI.
+- **Backend**: Java 17, Spring Boot 4.0.6, Spring Data JPA, Flyway (quản lý phiên bản schema), Spring Security (đăng nhập bằng form + CSRF cho cổng quản trị người bán)
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS, được đóng gói trực tiếp vào thư mục static/ của Spring Boot (cùng origin, không cần cấu hình CORS)
+- **Cơ sở dữ liệu**: PostgreSQL 18 (RDS), schema được quản lý hoàn toàn qua các migration Flyway, đi kèm phiên bản cùng với source code
+- **Hạ tầng**: Toàn bộ tài nguyên AWS được khởi tạo qua Console (không dùng IaC, do giới hạn thời gian), mỗi bước cấu hình được ghi lại để tái sử dụng trong lab Workshop
+- **CI/CD**: GitHub Actions, build và test bằng một PostgreSQL service container mô phỏng môi trường RDS thật trong CI
 
 ### 5. Lộ trình & Mốc triển khai
 
 **Lộ trình dự án**
 
-- Thời gian thực tập: 2 tháng.
-  - Tháng 1: Học AWS và thực hiện các labs.
-  - Tháng 2: Thiết kế kiến trúc, triển khai, kiểm thử và đưa hệ thống vào hoạt động.
+- Thực tập (Tháng 1-2): 2 tháng.
+  - Tháng 1: Học AWS và làm lab
+  - Tháng 2: Thiết kế kiến trúc, triển khai, kiểm thử và ra mắt
 
 ### 6. Ước tính ngân sách
 
-Có thể xem chi phí ước tính trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).
+Bạn có thể xem ước tính ngân sách trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=aa60066de7ae4feb705c3dd690f39a0977a659b9).
 
 ### Chi phí hạ tầng
 
-- AWS Services:
-  - Amazon EC2: Chi phí cho instance chạy backend Spring Boot.
-  - Amazon RDS PostgreSQL: Chi phí cho managed database instance và storage.
-  - Amazon S3: Chi phí lưu trữ ảnh sản phẩm và requests.
-  - Amazon CloudWatch: Chi phí log ingestion, log storage, metrics và alarms.
-  - Amazon SNS: Chi phí gửi email notification cho alarms.
-  - AWS Secrets Manager: Chi phí lưu trữ và quản lý secrets.
-  - Elastic IP / Data Transfer: Chi phí liên quan đến IP tĩnh và traffic ra Internet nếu vượt free-tier hoặc quota miễn phí.
+- Amazon Route 53: 0,50 USD/tháng (Hosted Zone, các record bổ sung trong hosted zone)
+- Amazon WAF: 7,00 USD/tháng (1 Web ACL sử dụng mỗi tháng, 2 rule bổ sung)
+- Amazon CloudFront: 0,00 USD/tháng (gói miễn phí)
+- Amazon S3: 0,20 USD/tháng (lưu trữ Standard - 8GB/tháng)
+- Amazon EC2: 4,16 USD/tháng (Linux, t3.micro, bật monitoring)
+- Amazon RDS: 100,36 USD/tháng (100GB, db.t4g.micro, chỉ on-demand)
 
-Tổng chi phí phụ thuộc vào loại instance, dung lượng database, lượng log, số lượng ảnh sản phẩm và traffic thực tế của website.
+Tổng: 121,22 USD/tháng và 1454,64 USD/12 tháng
 
 ### 7. Đánh giá rủi ro
 
 #### Ma trận rủi ro
 
-- Server downtime: Ảnh hưởng cao, xác suất trung bình.
-- Database unavailable: Ảnh hưởng cao, xác suất thấp đến trung bình.
-- Lộ credentials hoặc cấu hình sai quyền truy cập: Ảnh hưởng cao, xác suất trung bình.
-- S3 object bị public ngoài ý muốn: Ảnh hưởng cao, xác suất thấp.
-- Vượt ngân sách do logs, storage hoặc data transfer tăng nhanh: Ảnh hưởng trung bình, xác suất trung bình.
+- Điểm lỗi đơn (Single Point of Failure) ở EC2/RDS: Ảnh hưởng cao, xác suất trung bình.
+- Rò rỉ thông tin xác thực / lộ dữ liệu: Ảnh hưởng cao, xác suất thấp.
+- Vượt ngân sách (RDS Multi-AZ, EC2 chạy liên tục): Ảnh hưởng trung bình, xác suất trung bình.
+- Triển khai lỗi: Ảnh hưởng trung bình, xác suất thấp.
 
 #### Chiến lược giảm thiểu
 
-- Server: Chạy ứng dụng bằng `systemd` service với `Restart=on-failure`, sử dụng CloudWatch để phát hiện lỗi sớm.
-- Database: Đặt RDS trong private subnet, chỉ cho phép kết nối từ Security Group của backend, và bật Multi-AZ trong giai đoạn nâng cao.
-- Credentials: Di chuyển credentials sang Secrets Manager, hạn chế lưu plaintext credentials trên EC2.
-- S3: Bật Block Public Access, sử dụng IAM Role theo nguyên tắc least privilege và chỉ cấp quyền trên folder cần thiết.
-- Chi phí: Tạo CloudWatch Alarms và AWS Budget alerts để theo dõi log volume, storage và các dịch vụ phát sinh chi phí.
+- Tính sẵn sàng: Auto Scaling Group trên 2 AZ phía sau ALB, RDS ở chế độ Multi-AZ.
+- Bảo mật: Secrets Manager để xoay vòng thông tin xác thực, IAM least-privilege, WAF Web ACL.
+- Chi phí: CloudWatch billing alarm, chọn kích thước instance phù hợp (t3.micro/db.t4g.micro).
+- Triển khai: CI/CD GitHub Actions chạy build và test trước mỗi lần deploy.
 
 #### Kế hoạch dự phòng
 
-- Nếu deployment mới lỗi, rollback về phiên bản `.jar` ổn định trước đó.
-- Nếu database migration lỗi, kiểm tra Flyway history và rollback bằng backup hoặc snapshot.
-- Nếu EC2 gặp sự cố, tạo instance mới từ cấu hình đã được document và deploy lại ứng dụng.
-- Nếu S3 upload lỗi, kiểm tra IAM Role, bucket policy, prefix permission và CloudWatch logs của ứng dụng.
-- Nếu AWS service gặp sự cố trong một AZ, sử dụng Multi-AZ RDS và Auto Scaling Group để giảm ảnh hưởng tới hệ thống.
+- Rollback về bản build ổn định trước đó thông qua GitHub Actions nếu deploy thất bại.
+- Khôi phục RDS từ snapshot tự động nếu xảy ra lỗi dữ liệu.
 
 ### 8. Kết quả kỳ vọng
 
-#### Cải tiến kỹ thuật
-
-Ứng dụng DIY Shop được triển khai trên AWS thay vì chỉ chạy local, có database managed bằng RDS, lưu trữ ảnh sản phẩm trên S3, backend chạy ổn định trên EC2 và có khả năng giám sát thông qua CloudWatch. Quy trình vận hành được cải thiện nhờ CI/CD, logs tập trung, alarms và email notifications.
-
-#### Giá trị dài hạn
-
-Hệ thống tạo nền tảng để chủ shop vận hành kênh bán hàng online riêng, quản lý sản phẩm, tồn kho và đơn hàng tập trung. Kiến trúc có thể tiếp tục mở rộng với Multi-AZ, Load Balancer, Auto Scaling, WAF, Secrets Manager và CI/CD automation để phù hợp với nhu cầu production trong tương lai.
+- Đảm bảo bảo mật cơ bản thông qua IAM và WAF
+- Đảm bảo migration schema qua Flyway lên RDS diễn ra ổn định
+- Log và metric được hiển thị qua dashboard CloudWatch, kèm thông báo email được gửi mỗi khi có alarm được kích hoạt
