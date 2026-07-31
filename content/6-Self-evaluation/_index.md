@@ -6,34 +6,30 @@ chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+During the First Cloud AI Journey program, I had the opportunity to apply what I learned at university to practical tasks related to cloud computing and security.
 
-During my internship at **[Company/Organization Name]** from **[start date]** to **[end date]**, I had the opportunity to learn, practice, and apply the knowledge acquired in school to a real-world working environment.  
-I participated in **[briefly describe the main project or task]**, through which I improved my skills in **[list skills: programming, analysis, reporting, communication, etc.]**.  
+Through the assigned work, I improved my technical knowledge, research skills, reporting, communication, and ability to work independently. I also learned how to manage tasks, receive feedback, and cooperate with other team members.
 
-In terms of work ethic, I always strived to complete tasks well, complied with workplace regulations, and actively engaged with colleagues to improve work efficiency.
+Below is my self-assessment during the program:
 
-To objectively reflect on my internship period, I would like to evaluate myself based on the following criteria:
+| No. | Criteria | Description | Good | Fair | Average |
+| --- | --- | --- | --- | --- | --- |
+| 1 | **Professional knowledge and skills** | Applying knowledge and using tools effectively | ✅ | ☐ | ☐ |
+| 2 | **Ability to learn** | Learning and applying new knowledge | ✅ | ☐ | ☐ |
+| 3 | **Proactiveness** | Researching and handling tasks independently | ✅ | ☐ | ☐ |
+| 4 | **Responsibility** | Completing assigned tasks on time | ✅ | ☐ | ☐ |
+| 5 | **Discipline** | Following schedules and working rules | ☐ | ✅ | ☐ |
+| 6 | **Willingness to improve** | Receiving feedback and correcting mistakes | ✅ | ☐ | ☐ |
+| 7 | **Communication** | Reporting work and presenting ideas clearly | ☐ | ✅ | ☐ |
+| 8 | **Teamwork** | Cooperating and supporting team members | ✅ | ☐ | ☐ |
+| 9 | **Professional conduct** | Maintaining a respectful and serious attitude | ✅ | ☐ | ☐ |
+| 10 | **Problem-solving** | Identifying problems and finding suitable solutions | ☐ | ✅ | ☐ |
+| 11 | **Contribution** | Completing work and contributing to the program | ✅ | ☐ | ☐ |
+| 12 | **Overall evaluation** | General performance during the program | ✅ | ☐ | ☐ |
 
-| No. | Criteria                            | Description                                                                                      | Good | Fair | Average |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ------- |
-| 1   | **Professional knowledge & skills** | Understanding of the field, applying knowledge in practice, proficiency with tools, work quality | ✅    | ☐    | ☐       |
-| 2   | **Ability to learn**                | Ability to absorb new knowledge and learn quickly                                                | ☐    | ✅    | ☐       |
-| 3   | **Proactiveness**                   | Taking initiative, seeking out tasks without waiting for instructions                            | ✅    | ☐    | ☐       |
-| 4   | **Sense of responsibility**         | Completing tasks on time and ensuring quality                                                    | ✅    | ☐    | ☐       |
-| 5   | **Discipline**                      | Adhering to schedules, rules, and work processes                                                 | ☐    | ☐    | ✅       |
-| 6   | **Progressive mindset**             | Willingness to receive feedback and improve oneself                                              | ☐    | ✅    | ☐       |
-| 7   | **Communication**                   | Presenting ideas and reporting work clearly                                                      | ☐    | ✅    | ☐       |
-| 8   | **Teamwork**                        | Working effectively with colleagues and participating in teams                                   | ✅    | ☐    | ☐       |
-| 9   | **Professional conduct**            | Respecting colleagues, partners, and the work environment                                        | ✅    | ☐    | ☐       |
-| 10  | **Problem-solving skills**          | Identifying problems, proposing solutions, and showing creativity                                | ☐    | ✅    | ☐       |
-| 11  | **Contribution to project/team**    | Work effectiveness, innovative ideas, recognition from the team                                  | ✅    | ☐    | ☐       |
-| 12  | **Overall**                         | General evaluation of the entire internship period                                               | ✅    | ☐    | ☐       |
+### Areas for Improvement
 
-### Needs Improvement
-
-* Strengthen discipline and strictly comply with the rules and regulations of the company or any organization  
-* Improve problem-solving thinking  
-* Enhance communication skills in both daily interactions and professional contexts, including handling situations effectively
+- Improve time management and discipline.
+- Develop a more structured approach to problem-solving.
+- Communicate progress and difficulties more clearly.
+- Gain more practical experience with AWS services and cloud security.

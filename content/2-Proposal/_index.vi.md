@@ -6,13 +6,11 @@ chapter: false
 pre: " <b> 2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Một số từ ngữ sẽ được giữ nguyên tiếng Anh trong bản dịch để đảm bảo đúng ngữ nghĩa theo ngữ cảnh.
-{{% /notice %}}
+Trong phần này, tôi tóm tắt đề xuất workshop/project về việc triển khai và bảo mật ứng dụng DIY Shop trên AWS.
 
-# DIY SHOP
+# Nền tảng thương mại điện tử DIY Shop
 
-## E-commerce management leverages AWS services
+## Giải pháp AWS bảo mật cho website bán đồ thủ công trực tuyến
 
 ### 1. Tóm tắt điều hành
 
