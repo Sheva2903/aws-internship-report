@@ -12,7 +12,7 @@ pre: " <b> 3.3. </b> "
 Xóa một object khỏi cloud storage và làm cho dữ liệu không thể khôi phục không phải lúc nào cũng giống nhau. Trong hệ thống lưu trữ phân tán, dữ liệu có thể tồn tại dưới dạng replica, backup, snapshot hoặc version cũ. FADE tiếp cận vấn đề này bằng cách xóa khóa mật mã thay vì chỉ dựa vào xóa vật lý.
 {{% /notice %}}
 
-{{< figure src="images/3-BlogsPosted/3.3-Blog3/fade-cryptographic-deletion-diagram.png" title="FADE: Cryptographic deletion for cloud storage" >}}
+{{< figure src="/aws-internship-report/images/3-BlogsPosted/3.3-Blog3/fade-cryptographic-deletion-diagram.png" title="FADE: Cryptographic deletion for cloud storage" >}}
 
 ## 1. Vấn đề của việc xóa dữ liệu trên cloud
 

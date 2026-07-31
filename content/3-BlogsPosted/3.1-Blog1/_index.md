@@ -26,7 +26,7 @@ A simple way to understand the model is this:
 
 > AWS secures the cloud foundation. Customers secure what they build and configure on top of it.
 
-{{< figure src="images/3-BlogsPosted/3.1-Blog1/aws-shared-responsibility-model.png" title="Shared Responsibility Model on AWS" >}}
+{{< figure src="/aws-internship-report/images/3-BlogsPosted/3.1-Blog1/aws-shared-responsibility-model.png" title="Shared Responsibility Model on AWS" >}}
 
 ## 2. Responsibility Changes by Service
 

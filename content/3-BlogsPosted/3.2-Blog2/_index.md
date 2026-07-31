@@ -34,7 +34,7 @@ AWS documentation states that the Nitro Hypervisor is intentionally minimal. It 
 
 For serverless and container-based workloads, AWS also uses technologies such as Firecracker microVMs. Firecracker was built to provide lightweight virtualization for services such as AWS Lambda and AWS Fargate.
 
-{{< figure src="images/3-BlogsPosted/3.2-Blog2/aws-multitenancy-virtualization.png" title="Multi-tenancy and Virtualization in AWS" >}}
+{{< figure src="/aws-internship-report/images/3-BlogsPosted/3.2-Blog2/aws-multitenancy-virtualization.png" title="Multi-tenancy and Virtualization in AWS" >}}
 
 ## 3. Key Security Risks
 

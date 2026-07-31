@@ -34,7 +34,7 @@ Tài liệu AWS nêu rằng Nitro Hypervisor được thiết kế tối giản.
 
 Với workload serverless và container, AWS cũng sử dụng các công nghệ như Firecracker microVMs. Firecracker được xây dựng để cung cấp lightweight virtualization cho các dịch vụ như AWS Lambda và AWS Fargate.
 
-{{< figure src="images/3-BlogsPosted/3.2-Blog2/aws-multitenancy-virtualization.png" title="Multi-tenancy and Virtualization in AWS" >}}
+{{< figure src="/aws-internship-report/images/3-BlogsPosted/3.2-Blog2/aws-multitenancy-virtualization.png" title="Multi-tenancy and Virtualization in AWS" >}}
 
 ## 3. Các rủi ro bảo mật chính
 

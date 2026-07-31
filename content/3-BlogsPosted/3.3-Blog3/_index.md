@@ -12,7 +12,7 @@ pre: " <b> 3.3. </b> "
 Deleting an object from cloud storage and making data permanently unrecoverable are not always the same thing. In distributed storage, data may exist as replicas, backups, snapshots, or older versions. FADE approaches this problem by deleting the cryptographic key instead of relying only on physical deletion.
 {{% /notice %}}
 
-{{< figure src="images/3-BlogsPosted/3.3-Blog3/fade-cryptographic-deletion-diagram.png" title="FADE: Cryptographic deletion for cloud storage" >}}
+{{< figure src="/aws-internship-report/images/3-BlogsPosted/3.3-Blog3/fade-cryptographic-deletion-diagram.png" title="FADE: Cryptographic deletion for cloud storage" >}}
 
 ## 1. The cloud deletion problem
 
