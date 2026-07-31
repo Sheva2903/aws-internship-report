@@ -5,104 +5,129 @@ weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
+
 {{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
+⚠️ **Lưu ý:** Một số từ ngữ sẽ được giữ nguyên tiếng Anh trong bản dịch để đảm bảo đúng ngữ nghĩa theo ngữ cảnh.
 {{% /notice %}}
 
-Tại phần này, bạn cần tóm tắt các nội dung trong workshop mà bạn **dự tính** sẽ làm.
+# DIY SHOP
 
-# IoT Weather Platform for Lab Research  
-## Giải pháp AWS Serverless hợp nhất cho giám sát thời tiết thời gian thực  
+## E-commerce management leverages AWS services
 
-### 1. Tóm tắt điều hành  
-IoT Weather Platform được thiết kế dành cho nhóm *ITea Lab* tại TP. Hồ Chí Minh nhằm nâng cao khả năng thu thập và phân tích dữ liệu thời tiết. Nền tảng hỗ trợ tối đa 5 trạm thời tiết, có khả năng mở rộng lên 10–15 trạm, sử dụng thiết bị biên Raspberry Pi kết hợp cảm biến ESP32 để truyền dữ liệu qua MQTT. Nền tảng tận dụng các dịch vụ AWS Serverless để cung cấp giám sát thời gian thực, phân tích dự đoán và tiết kiệm chi phí, với quyền truy cập giới hạn cho 5 thành viên phòng lab thông qua Amazon Cognito.  
+### 1. Tóm tắt điều hành
 
-### 2. Tuyên bố vấn đề  
-*Vấn đề hiện tại*  
-Các trạm thời tiết hiện tại yêu cầu thu thập dữ liệu thủ công, khó quản lý khi có nhiều trạm. Không có hệ thống tập trung cho dữ liệu hoặc phân tích thời gian thực, và các nền tảng bên thứ ba thường tốn kém và quá phức tạp.  
+DIY Shop là một website được xây dựng cho hoạt động kinh doanh đồ thủ công và tranh vẽ tay, hỗ trợ chủ shop (người bán duy nhất) quản lý và vận hành cửa hàng trực tuyến. Ứng dụng cho phép khách hàng duyệt danh mục sản phẩm và đặt hàng qua website với hai phương thức thanh toán: (1) Thanh toán khi nhận hàng (COD) và (2) Chuyển khoản ngân hàng (VietQR). Sau khi đặt hàng thành công, hệ thống cho phép khách hàng theo dõi trạng thái đơn hàng bằng mã đơn nhận được khi thanh toán. Về phía vận hành, một dashboard hỗ trợ chủ shop quản lý danh mục sản phẩm, kiểm soát tồn kho và xử lý trạng thái đơn hàng, với trạng thái thanh toán được theo dõi độc lập với trạng thái giao hàng. Website tận dụng các dịch vụ AWS để hiện thực hóa việc tự động hóa vận hành và quản lý.
 
-*Giải pháp*  
-Nền tảng sử dụng AWS IoT Core để tiếp nhận dữ liệu MQTT, AWS Lambda và API Gateway để xử lý, Amazon S3 để lưu trữ (bao gồm data lake), và AWS Glue Crawlers cùng các tác vụ ETL để trích xuất, chuyển đổi, tải dữ liệu từ S3 data lake sang một S3 bucket khác để phân tích. AWS Amplify với Next.js cung cấp giao diện web, và Amazon Cognito đảm bảo quyền truy cập an toàn. Tương tự như Thingsboard và CoreIoT, người dùng có thể đăng ký thiết bị mới và quản lý kết nối, nhưng nền tảng này hoạt động ở quy mô nhỏ hơn và phục vụ mục đích sử dụng nội bộ. Các tính năng chính bao gồm bảng điều khiển thời gian thực, phân tích xu hướng và chi phí vận hành thấp.  
+### 2. Tuyên bố vấn đề
 
-*Lợi ích và hoàn vốn đầu tư (ROI)*  
-Giải pháp tạo nền tảng cơ bản để các thành viên phòng lab phát triển một nền tảng IoT lớn hơn, đồng thời cung cấp nguồn dữ liệu cho những người nghiên cứu AI phục vụ huấn luyện mô hình hoặc phân tích. Nền tảng giảm bớt báo cáo thủ công cho từng trạm thông qua hệ thống tập trung, đơn giản hóa quản lý và bảo trì, đồng thời cải thiện độ tin cậy dữ liệu. Chi phí hàng tháng ước tính 0,66 USD (theo AWS Pricing Calculator), tổng cộng 7,92 USD cho 12 tháng. Tất cả thiết bị IoT đã được trang bị từ hệ thống trạm thời tiết hiện tại, không phát sinh chi phí phát triển thêm. Thời gian hoàn vốn 6–12 tháng nhờ tiết kiệm đáng kể thời gian thao tác thủ công.  
+### Vấn đề là gì?
 
-### 3. Kiến trúc giải pháp  
-Nền tảng áp dụng kiến trúc AWS Serverless để quản lý dữ liệu từ 5 trạm dựa trên Raspberry Pi, có thể mở rộng lên 15 trạm. Dữ liệu được tiếp nhận qua AWS IoT Core, lưu trữ trong S3 data lake và xử lý bởi AWS Glue Crawlers và ETL jobs để chuyển đổi và tải vào một S3 bucket khác cho mục đích phân tích. Lambda và API Gateway xử lý bổ sung, trong khi Amplify với Next.js cung cấp bảng điều khiển được bảo mật bởi Cognito.  
+Người bán đồ thủ công và tranh vẽ hiện chưa có một kênh bán hàng trực tuyến chuyên biệt để trưng bày sản phẩm, nhận đơn hàng và theo dõi tồn kho. Điều này khiến quy trình dễ phát sinh sai sót khi số lượng đơn hàng tăng lên, do không có nguồn dữ liệu chung giữa người bán và khách hàng. Là một người bán đơn lẻ, không có chuyên môn kỹ thuật - hoạt động mà không có đội ngũ kỹ thuật hay vận hành riêng - chủ shop sẽ phải xử lý những công việc vượt quá chuyên môn của mình, chẳng hạn như bảo mật dữ liệu cá nhân của khách hàng (họ tên, số điện thoại và địa chỉ thu thập khi thanh toán) và xử lý sự cố máy chủ. Điều này có thể dẫn đến việc khắc phục tốn nhiều thời gian, thậm chí có nguy cơ lộ thông tin khách hàng.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+### Giải pháp
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+Hệ thống được triển khai trên **Amazon EC2**, chạy dưới dạng dịch vụ `systemd` được quản lý, kết nối tới một **instance Amazon RDS PostgreSQL** đặt trong private subnet (với kết nối bị giới hạn theo nguyên tắc least-privilege); hình ảnh sản phẩm được lưu trên **Amazon S3** thông qua một **IAM role**. **Amazon CloudWatch** thu thập log ứng dụng và log truy cập, từ đó suy ra các metric lỗi thông qua metric filter, rồi kích hoạt cảnh báo qua email khi tỷ lệ lỗi vượt ngưỡng. **GitHub Actions** tự động hóa việc build, test và deploy mỗi khi có thay đổi code.
 
-*Dịch vụ AWS sử dụng*  
-- *AWS IoT Core*: Tiếp nhận dữ liệu MQTT từ 5 trạm, mở rộng lên 15.  
-- *AWS Lambda*: Xử lý dữ liệu và kích hoạt Glue jobs (2 hàm).  
-- *Amazon API Gateway*: Giao tiếp với ứng dụng web.  
-- *Amazon S3*: Lưu trữ dữ liệu thô (data lake) và dữ liệu đã xử lý (2 bucket).  
-- *AWS Glue*: Crawlers lập chỉ mục dữ liệu, ETL jobs chuyển đổi và tải dữ liệu.  
-- *AWS Amplify*: Lưu trữ giao diện web Next.js.  
-- *Amazon Cognito*: Quản lý quyền truy cập cho người dùng phòng lab.  
+### 3. Kiến trúc giải pháp
 
-*Thiết kế thành phần*  
-- *Thiết bị biên*: Raspberry Pi thu thập và lọc dữ liệu cảm biến, gửi tới IoT Core.  
-- *Tiếp nhận dữ liệu*: AWS IoT Core nhận tin nhắn MQTT từ thiết bị biên.  
-- *Lưu trữ dữ liệu*: Dữ liệu thô lưu trong S3 data lake; dữ liệu đã xử lý lưu ở một S3 bucket khác.  
-- *Xử lý dữ liệu*: AWS Glue Crawlers lập chỉ mục dữ liệu; ETL jobs chuyển đổi để phân tích.  
-- *Giao diện web*: AWS Amplify lưu trữ ứng dụng Next.js cho bảng điều khiển và phân tích thời gian thực.  
-- *Quản lý người dùng*: Amazon Cognito giới hạn 5 tài khoản hoạt động.  
+DIY Shop được triển khai trong một VPC riêng, trải rộng trên 2 Availability Zone (AZ) để đảm bảo tính sẵn sàng cao. Yêu cầu của người dùng đi qua ba lớp trước khi đến được ứng dụng, từ Route 53 tới CloudFront và WAF, rồi đến Application Load Balancer. Ứng dụng chạy trên các EC2 instance được quản lý bởi Auto Scaling Group, phân bổ trên 2 AZ trong các public subnet. Phần dữ liệu bao gồm RDS PostgreSQL ở chế độ Multi-AZ và S3 để lưu trữ hình ảnh sản phẩm. Toàn bộ vòng đời vận hành được hỗ trợ bởi CloudWatch (giám sát), SNS (cảnh báo), Secrets Manager (quản lý thông tin xác thực), IAM (kiểm soát truy cập) và GitHub Actions (tự động hóa CI/CD).
 
-### 4. Triển khai kỹ thuật  
-*Các giai đoạn triển khai*  
-Dự án gồm 2 phần — thiết lập trạm thời tiết biên và xây dựng nền tảng thời tiết — mỗi phần trải qua 4 giai đoạn:  
-1. *Nghiên cứu và vẽ kiến trúc*: Nghiên cứu Raspberry Pi với cảm biến ESP32 và thiết kế kiến trúc AWS Serverless (1 tháng trước kỳ thực tập).  
-2. *Tính toán chi phí và kiểm tra tính khả thi*: Sử dụng AWS Pricing Calculator để ước tính và điều chỉnh (Tháng 1).  
-3. *Điều chỉnh kiến trúc để tối ưu chi phí/giải pháp*: Tinh chỉnh (ví dụ tối ưu Lambda với Next.js) để đảm bảo hiệu quả (Tháng 2).  
-4. *Phát triển, kiểm thử, triển khai*: Lập trình Raspberry Pi, AWS services với CDK/SDK và ứng dụng Next.js, sau đó kiểm thử và đưa vào vận hành (Tháng 2–3).  
+![Kiến trúc DIY Shop](final_arch.png)
 
-*Yêu cầu kỹ thuật*  
-- *Trạm thời tiết biên*: Cảm biến (nhiệt độ, độ ẩm, lượng mưa, tốc độ gió), vi điều khiển ESP32, Raspberry Pi làm thiết bị biên. Raspberry Pi chạy Raspbian, sử dụng Docker để lọc dữ liệu và gửi 1 MB/ngày/trạm qua MQTT qua Wi-Fi.  
-- *Nền tảng thời tiết*: Kiến thức thực tế về AWS Amplify (lưu trữ Next.js), Lambda (giảm thiểu do Next.js xử lý), AWS Glue (ETL), S3 (2 bucket), IoT Core (gateway và rules), và Cognito (5 người dùng). Sử dụng AWS CDK/SDK để lập trình (ví dụ IoT Core rules tới S3). Next.js giúp giảm tải Lambda cho ứng dụng web fullstack.  
+### Các dịch vụ AWS sử dụng
 
-### 5. Lộ trình & Mốc triển khai  
-- *Trước thực tập (Tháng 0)*: 1 tháng lên kế hoạch và đánh giá trạm cũ.  
-- *Thực tập (Tháng 1–3)*:  
-    - Tháng 1: Học AWS và nâng cấp phần cứng.  
-    - Tháng 2: Thiết kế và điều chỉnh kiến trúc.  
-    - Tháng 3: Triển khai, kiểm thử, đưa vào sử dụng.  
-- *Sau triển khai*: Nghiên cứu thêm trong vòng 1 năm.  
+- **Amazon VPC**: Cung cấp mạng biệt lập với 2 public subnet và 2 private subnet trên 2 AZ
+- **Amazon EC2**: Lưu trữ backend Spring Boot, chạy dưới dạng dịch vụ `systemd` được quản lý trong public subnet
+- **Amazon RDS**: Cơ sở dữ liệu quan hệ được quản lý, lưu toàn bộ dữ liệu giao dịch cốt lõi
+- **Amazon S3**: Lưu trữ hình ảnh sản phẩm; cơ sở dữ liệu chỉ lưu tham chiếu
+- **Route 53**: phân giải domain trỏ về CloudFront
+- **CloudFront**: CDN, cache tài nguyên tĩnh tại các edge location
+- **AWS IAM**: Áp dụng nguyên tắc least privilege
+- **Amazon CloudWatch**: Tập trung log ứng dụng và log truy cập vào log group, suy ra metric đếm lỗi từ các log đó thông qua metric filter, và đánh giá alarm dựa trên các metric này
+- **Amazon SNS**: Gửi thông báo email mỗi khi CloudWatch Alarm chuyển sang trạng thái `ALARM`
+- **Secrets Manager**: lưu trữ và tự động xoay vòng thông tin xác thực của DB và người bán
 
-### 6. Ước tính ngân sách  
-Có thể xem chi phí trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01)  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).  
+### Thiết kế thành phần
 
-*Chi phí hạ tầng*  
-- AWS Lambda: 0,00 USD/tháng (1.000 request, 512 MB lưu trữ).  
-- S3 Standard: 0,15 USD/tháng (6 GB, 2.100 request, 1 GB quét).  
-- Truyền dữ liệu: 0,02 USD/tháng (1 GB vào, 1 GB ra).  
-- AWS Amplify: 0,35 USD/tháng (256 MB, request 500 ms).  
-- Amazon API Gateway: 0,01 USD/tháng (2.000 request).  
-- AWS Glue ETL Jobs: 0,02 USD/tháng (2 DPU).  
-- AWS Glue Crawlers: 0,07 USD/tháng (1 crawler).  
-- MQTT (IoT Core): 0,08 USD/tháng (5 thiết bị, 45.000 tin nhắn).  
+- **Edge và phân phối lưu lượng**: Route 53 phân giải domain tới một alias record trỏ về CloudFront (cache tài nguyên tĩnh, gắn WAF). Mọi request đều được WAF kiểm tra trước khi chuyển tới ALB (cân bằng tải, chấm dứt TLS).
+- **Tầng ứng dụng**: Auto Scaling Group quản lý các EC2 instance (2 AZ), mỗi instance chạy một file `jar` Spring Boot duy nhất với frontend React được đóng gói cùng origin, nên không cần cấu hình CORS
+- **Tầng dữ liệu**: RDS PostgreSQL Multi-AZ, sử dụng S3 để lưu hình ảnh sản phẩm thông qua IAM Role và presigned URL
+- **Bảo mật và quản lý thông tin xác thực**: Secrets Manager lưu trữ thông tin xác thực DB; IAM áp dụng quyền truy cập least-privilege cho EC2
+- **Khả năng quan sát (Observability)**: CloudWatch Agent thu thập log và metric. Alarm chịu trách nhiệm kiểm tra điều kiện dựa trên các metric đó
+- **CI/CD**: GitHub Actions tự động build, test và deploy mỗi khi có push
 
-*Tổng*: 0,7 USD/tháng, 8,40 USD/12 tháng  
-- *Phần cứng*: 265 USD một lần (Raspberry Pi 5 và cảm biến).  
+### 4. Triển khai kỹ thuật
 
-### 7. Đánh giá rủi ro  
-*Ma trận rủi ro*  
-- Mất mạng: Ảnh hưởng trung bình, xác suất trung bình.  
-- Hỏng cảm biến: Ảnh hưởng cao, xác suất thấp.  
-- Vượt ngân sách: Ảnh hưởng trung bình, xác suất thấp.  
+**Các giai đoạn triển khai**
+Dự án được thực hiện qua 2 giai đoạn liên tiếp: (1) Nền tảng cốt lõi (Core Foundation), (2) Bảo mật và độ tin cậy (Security and Reliability).
 
-*Chiến lược giảm thiểu*  
-- Mạng: Lưu trữ cục bộ trên Raspberry Pi với Docker.  
-- Cảm biến: Kiểm tra định kỳ, dự phòng linh kiện.  
-- Chi phí: Cảnh báo ngân sách AWS, tối ưu dịch vụ.  
+Về nền tảng cốt lõi (2 tuần):
 
-*Kế hoạch dự phòng*  
-- Quay lại thu thập thủ công nếu AWS gặp sự cố.  
-- Sử dụng CloudFormation để khôi phục cấu hình liên quan đến chi phí.  
+- Khởi tạo VPC, Security Group, RDS PostgreSQL và EC2; migrate schema thông qua Flyway lên instance RDS thật
+- Thiết lập một S3 bucket với IAM Role least-privilege để lưu hình ảnh sản phẩm, xác thực bằng một lần upload thử thực tế
+- Ổn định ứng dụng thông qua dịch vụ `systemd`, kết nối CloudWatch Agent, Metric Filter, Alarm và SNS. Sau đó, xây dựng pipeline CI/CD GitHub Actions để build và deploy tự động, và gắn một Elastic IP
 
-### 8. Kết quả kỳ vọng  
-*Cải tiến kỹ thuật*: Dữ liệu và phân tích thời gian thực thay thế quy trình thủ công. Có thể mở rộng tới 10–15 trạm.  
-*Giá trị dài hạn*: Nền tảng dữ liệu 1 năm cho nghiên cứu AI, có thể tái sử dụng cho các dự án tương lai.
+Về bảo mật và độ tin cậy (1 tuần):
+
+- **Secrets Manager**: chuyển toàn bộ thông tin xác thực từ file văn bản thuần trên EC2 sang secrets có audit trail và tự động xoay vòng
+- **Multi-AZ RDS**: bật Multi-AZ cho instance hiện có, loại bỏ điểm lỗi đơn (single point of failure) ở tầng dữ liệu
+- **Application Load Balancer**: thêm một lớp cân bằng tải và chấm dứt TLS, làm nền tảng cho Auto Scaling Group
+- **AWS WAF**: gắn một Web ACL để lọc các cuộc tấn công ở tầng ứng dụng và giới hạn tốc độ (rate-limit) cho endpoint đăng nhập
+
+**Yêu cầu kỹ thuật**
+
+- **Backend**: Java 17, Spring Boot 4.0.6, Spring Data JPA, Flyway (quản lý phiên bản schema), Spring Security (đăng nhập bằng form + CSRF cho cổng quản trị người bán)
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS, được đóng gói trực tiếp vào thư mục static/ của Spring Boot (cùng origin, không cần cấu hình CORS)
+- **Cơ sở dữ liệu**: PostgreSQL 18 (RDS), schema được quản lý hoàn toàn qua các migration Flyway, đi kèm phiên bản cùng với source code
+- **Hạ tầng**: Toàn bộ tài nguyên AWS được khởi tạo qua Console (không dùng IaC, do giới hạn thời gian), mỗi bước cấu hình được ghi lại để tái sử dụng trong lab Workshop
+- **CI/CD**: GitHub Actions, build và test bằng một PostgreSQL service container mô phỏng môi trường RDS thật trong CI
+
+### 5. Lộ trình & Mốc triển khai
+
+**Lộ trình dự án**
+
+- Thực tập (Tháng 1-2): 2 tháng.
+  - Tháng 1: Học AWS và làm lab
+  - Tháng 2: Thiết kế kiến trúc, triển khai, kiểm thử và ra mắt
+
+### 6. Ước tính ngân sách
+
+Bạn có thể xem ước tính ngân sách trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=aa60066de7ae4feb705c3dd690f39a0977a659b9).
+
+### Chi phí hạ tầng
+
+- Amazon Route 53: 0,50 USD/tháng (Hosted Zone, các record bổ sung trong hosted zone)
+- Amazon WAF: 7,00 USD/tháng (1 Web ACL sử dụng mỗi tháng, 2 rule bổ sung)
+- Amazon CloudFront: 0,00 USD/tháng (gói miễn phí)
+- Amazon S3: 0,20 USD/tháng (lưu trữ Standard - 8GB/tháng)
+- Amazon EC2: 4,16 USD/tháng (Linux, t3.micro, bật monitoring)
+- Amazon RDS: 100,36 USD/tháng (100GB, db.t4g.micro, chỉ on-demand)
+
+Tổng: 121,22 USD/tháng và 1454,64 USD/12 tháng
+
+### 7. Đánh giá rủi ro
+
+#### Ma trận rủi ro
+
+- Điểm lỗi đơn (Single Point of Failure) ở EC2/RDS: Ảnh hưởng cao, xác suất trung bình.
+- Rò rỉ thông tin xác thực / lộ dữ liệu: Ảnh hưởng cao, xác suất thấp.
+- Vượt ngân sách (RDS Multi-AZ, EC2 chạy liên tục): Ảnh hưởng trung bình, xác suất trung bình.
+- Triển khai lỗi: Ảnh hưởng trung bình, xác suất thấp.
+
+#### Chiến lược giảm thiểu
+
+- Tính sẵn sàng: Auto Scaling Group trên 2 AZ phía sau ALB, RDS ở chế độ Multi-AZ.
+- Bảo mật: Secrets Manager để xoay vòng thông tin xác thực, IAM least-privilege, WAF Web ACL.
+- Chi phí: CloudWatch billing alarm, chọn kích thước instance phù hợp (t3.micro/db.t4g.micro).
+- Triển khai: CI/CD GitHub Actions chạy build và test trước mỗi lần deploy.
+
+#### Kế hoạch dự phòng
+
+- Rollback về bản build ổn định trước đó thông qua GitHub Actions nếu deploy thất bại.
+- Khôi phục RDS từ snapshot tự động nếu xảy ra lỗi dữ liệu.
+
+### 8. Kết quả kỳ vọng
+
+- Đảm bảo bảo mật cơ bản thông qua IAM và WAF
+- Đảm bảo migration schema qua Flyway lên RDS diễn ra ổn định
+- Log và metric được hiển thị qua dashboard CloudWatch, kèm thông báo email được gửi mỗi khi có alarm được kích hoạt

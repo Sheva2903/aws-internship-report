@@ -12,9 +12,9 @@ pre: " <b> 2. </b> "
 
 In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
 
-# IoT Weather Platform for Lab Research
+# DIY SHOP
 
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+## E-commerce management leverages AWS services
 
 ### 1. Executive Summary
 
@@ -34,7 +34,7 @@ The system is deployed on **Amazon EC2**, running as a managed `systemd` service
 
 DIY shop is deployed inside a dedicated VPC spanning 2 Avaibility Zones (AZs) to ensure high availability. User requests pass through three layers before reaching the application from Route 32 to CloudFront and WAF then Application Load Balancer. The application runs on EC2 instances managed by an Auto Scaling Group, distributed across 2 AZs in a public subnets. The data consists of RDS PostgreSQL in Multi-AZ mode and S3 for product image storage. The entire operational lifecycle is supported by CloudWatch (monitoring), SNS (alerting), Secrets Manager (credential management), IAM (access control), and GitHub Actions (CI/CD automation).
 
-![DIY Shop Architecture](architecture.jpg)
+![DIY Shop Architecture](final_arch.png)
 
 ### AWS Services Used
 
@@ -82,7 +82,7 @@ About security and reliability (1 weeks):
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS, bundled directly into Spring Boot's static/ (same-origin, no CORS configuration needed)
 - **Database**: PostgreSQL 18 (RDS), schema fully managed through Flyway migrations versioned alongside the source code
 - **Infrastructure**: All AWS resources were provisioned via the Console (no IaC, due to time constraints), with each configuration step documented for reuse in the Workshop lab
-- **CI/CD**: GitHub Actions, build+test using a PostgreSQL service container that mirrors the real RDS environment in CI
+- **CI/CD**: GitHub Actions, build and test using a PostgreSQL service container that mirrors the real RDS environment in CI
 
 ### 5. Timeline & Milestones
 
@@ -94,52 +94,42 @@ About security and reliability (1 weeks):
 
 ### 6. Budget Estimation
 
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
+You can find mybudget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=aa60066de7ae4feb705c3dd690f39a0977a659b9).
 
 ### Infrastructure Costs
 
-- AWS Services:
-  - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-  - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-  - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-  - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-  - Amazon API Gateway: $0.01/month (2,000 requests).
-  - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-  - AWS Glue Crawlers: $0.07/month (1 crawler).
-  - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+- Amazon Route 53: $0.50/month (Hosted Zones, additional records in hosted zones)
+- Amazon WAF: $7.00/month (Web ACLs utilized 1 per month, 2 added rules)
+- Amazon Cloudfront $0.00/month (Free plan)
+- Amazon S3: $0.20/month (Standard storage - 8Gb/month)
+- Amazon EC2: $4.16/month (Linux, t3.micro, enable monitoring)
+- Amazon RDS: $100.36/month (100Gb, db.t4g.micro, on-demand only)
 
-Total: $0.7/month, $8.40/12 months
-
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+Total: $121.22/month and $1454.64/12 months
 
 ### 7. Risk Assessment
 
 #### Risk Matrix
 
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
+- Single Point of Failure (EC2/RDS): High impact, medium probability.
+- Credential Leakage / Data Breach: High impact, low probability.
+- Cost Overruns (RDS Multi-AZ, always-on EC2): Medium impact, medium probability.
+- Faulty Deployment: Medium impact, low probability.
 
 #### Mitigation Strategies
 
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+- Availability: Auto Scaling Group across 2 AZs behind an ALB, RDS in Multi-AZ mode.
+- Security: Secrets Manager for credential rotation, IAM least privilege, WAF Web ACL.
+- Cost: CloudWatch billing alarms, right-sized instances (t3.micro/db.t4g.micro).
+- Deployment: GitHub Actions CI/CD runs build and tests before every deploy.
 
 #### Contingency Plans
 
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+- Roll back to the previous stable build via GitHub Actions if a deployment fails.
+- Restore RDS from an automated snapshot in case of data corruption.
 
 ### 8. Expected Outcomes
 
-#### Technical Improvements:
-
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
-
-#### Long-term Value
-
-1-year data foundation for AI research.  
-Reusable for future projects.
+- Ensures baseline security through IAM and WAF
+- Ensures reliable Flyway schema migrations to RDS
+- Logs and metrics are visualized through CloudWatch dashboards, with email notifications sent whenever an alarm is triggered
