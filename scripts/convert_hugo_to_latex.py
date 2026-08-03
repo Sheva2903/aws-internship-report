@@ -126,6 +126,35 @@ def strip_frontmatter(content):
         return content[match.end():].strip()
     return content
 
+def resolve_relative_image_paths(content, markdown_path):
+    """Resolve page-bundle images relative to the source Markdown file."""
+
+    source_dir = os.path.dirname(markdown_path)
+
+    def replace_markdown_image(match):
+        alt_text = match.group(1)
+        image_path = match.group(2).strip()
+
+        # Leave URLs, absolute site paths, anchors and data URIs unchanged.
+        if (
+            image_path.startswith(("http://", "https://", "/", "#", "data:"))
+            or not image_path
+        ):
+            return match.group(0)
+
+        resolved = os.path.normpath(
+            os.path.join("..", source_dir, image_path)
+        )
+        return f"![{alt_text}]({resolved})"
+
+    content = re.sub(
+        r"!\[([^\]]*)\]\(([^)]+)\)",
+        replace_markdown_image,
+        content,
+    )
+
+    return content
+
 
 def get_bool_meta(meta, keys, default):
     for key in keys:
@@ -784,6 +813,7 @@ def process_language(lang):
             md_content = f.read()
 
         processed = preprocess_markdown(md_content, meta=meta)
+        processed = resolve_relative_image_paths(processed, md_path)
         latex = convert_to_latex(processed, source_path=md_path)
 
         out_path = os.path.join(lang_dir, f"{out_name}.tex")
