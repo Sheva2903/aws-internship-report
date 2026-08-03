@@ -127,7 +127,7 @@ def strip_frontmatter(content):
     return content
 
 def resolve_relative_image_paths(content, markdown_path):
-    """Resolve page-bundle images relative to the source Markdown file."""
+    """Resolve Hugo image paths for LaTeX compilation from report/."""
 
     source_dir = os.path.dirname(markdown_path)
 
@@ -135,25 +135,94 @@ def resolve_relative_image_paths(content, markdown_path):
         alt_text = match.group(1)
         image_path = match.group(2).strip()
 
-        # Leave URLs, absolute site paths, anchors and data URIs unchanged.
-        if (
-            image_path.startswith(("http://", "https://", "/", "#", "data:"))
-            or not image_path
-        ):
+        if not image_path:
             return match.group(0)
 
-        resolved = os.path.normpath(
-            os.path.join("..", source_dir, image_path)
-        )
+        if image_path.startswith(("http://", "https://", "#", "data:")):
+            return match.group(0)
+
+        repo_prefix = "/aws-internship-report/images/"
+
+        if image_path.startswith(repo_prefix):
+            relative_image = image_path[len(repo_prefix):]
+            resolved = os.path.join(
+                "..",
+                "static",
+                "images",
+                relative_image,
+            )
+
+        elif image_path.startswith("/static/images/"):
+            relative_image = image_path[len("/static/images/"):]
+            resolved = os.path.join(
+                "..",
+                "static",
+                "images",
+                relative_image,
+            )
+
+        elif image_path.startswith("/images/"):
+            relative_image = image_path[len("/images/"):]
+            resolved = os.path.join(
+                "..",
+                "static",
+                "images",
+                relative_image,
+            )
+
+        elif image_path.startswith("/"):
+            # Unknown absolute site path: leave unchanged.
+            return match.group(0)
+
+        else:
+            # Hugo page-bundle image beside the Markdown source.
+            resolved = os.path.join(
+                "..",
+                source_dir,
+                image_path,
+            )
+
+        # LaTeX paths should consistently use forward slashes.
+        resolved = os.path.normpath(resolved).replace(os.sep, "/")
+
         return f"![{alt_text}]({resolved})"
 
-    content = re.sub(
+    return re.sub(
         r"!\[([^\]]*)\]\(([^)]+)\)",
         replace_markdown_image,
         content,
     )
 
-    return content
+def convert_hugo_figure_shortcodes(content):
+    """Convert Hugo figure shortcodes into standard Markdown images."""
+
+    pattern = r"\{\{<\s*figure\s+([^>]*?)>\}\}"
+
+    def replace_figure(match):
+        raw_attributes = match.group(1)
+
+        attributes = {
+            key: value
+            for key, _quote, value in re.findall(
+                r'([\w-]+)\s*=\s*(["\'])(.*?)\2',
+                raw_attributes,
+            )
+        }
+
+        src = attributes.get("src")
+        if not src:
+            return match.group(0)
+
+        alt_text = (
+            attributes.get("title")
+            or attributes.get("caption")
+            or attributes.get("alt")
+            or os.path.basename(src)
+        )
+
+        return f"![{alt_text}]({src})"
+
+    return re.sub(pattern, replace_figure, content)
 
 
 def get_bool_meta(meta, keys, default):
@@ -577,6 +646,8 @@ def filter_markdown_sections(content, keep_headings):
 def preprocess_markdown(content, meta=None):
     meta = meta or {}
 
+    content = convert_hugo_figure_shortcodes(content)
+
     report_type = str(meta.get("reportType") or meta.get("report_type") or "").lower()
 
     if report_type == "worklog":
@@ -723,6 +794,7 @@ def convert_to_latex(md_text, source_path=None):
                     "--top-level-division=section",
                     "--lua-filter", LUA_FILTER,
                     "-o", tmp_out,
+                    "--listings"
                 ],
                 check=True,
                 capture_output=True,
