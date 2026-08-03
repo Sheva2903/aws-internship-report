@@ -193,6 +193,45 @@ def resolve_relative_image_paths(content, markdown_path):
         content,
     )
 
+def normalize_latex_unsafe_symbols(content):
+    """Replace Unicode symbols that often break pdflatex/listings."""
+
+    replacements = {
+        "→": "->",
+        "←": "<-",
+        "↑": "^",
+        "↓": "v",
+
+        "✅": "[x]",
+        "☑": "[x]",
+        "☐": "[ ]",
+        "✓": "[x]",
+        "✔": "[x]",
+
+        "⚠️": "!",
+        "⚠": "!",
+
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+
+        "–": "-",
+        "—": "-",
+        "…": "...",
+
+        "×": "x",
+        "≤": "<=",
+        "≥": ">=",
+        "≠": "!=",
+        "•": "-",
+    }
+
+    for src, dst in replacements.items():
+        content = content.replace(src, dst)
+
+    return content
+
 def convert_hugo_figure_shortcodes(content):
     """Convert Hugo figure shortcodes into standard Markdown images."""
 
@@ -647,6 +686,7 @@ def preprocess_markdown(content, meta=None):
     meta = meta or {}
 
     content = convert_hugo_figure_shortcodes(content)
+    content = normalize_latex_unsafe_symbols(content)
 
     report_type = str(meta.get("reportType") or meta.get("report_type") or "").lower()
 
@@ -686,7 +726,7 @@ def preprocess_markdown(content, meta=None):
     content = content.replace("\u2610", r"$\square$")
     content = re.sub(r"⚠\ufe0f?", "!", content)
     content = content.replace("\u26a0", "!")
-    content = content.replace("\u2192", r"$\rightarrow$")
+    # content = content.replace("\u2192", r"$\rightarrow$")
 
     return content
 # ---------------------------------------------------------------------------
